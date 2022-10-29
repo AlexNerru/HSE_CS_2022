@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  app:
+    image: node:12-alpine
+    command: sh -c "yarn install && yarn run dev"
+    ports:
+      - 3000:3000
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      PGHOST: postgres
+      PGUSER: alexnerru
+      PGPASSWORD: secret
+      PGDATABASE: todos
+    networks:
+      - todo
+
+  postgres:
+    image: postgres:latest
+    volumes:
+      - todo-postgres-data:/var/lib/postgres
+    environment:
+      POSTGRES_USER: alexnerru
+      POSTGRES_DB: todos
+      POSTGRES_PASSWORD: secret
+    networks:
+      - todo
+
+volumes:
+  todo-postgres-data:
+
+networks:
+  todo:
